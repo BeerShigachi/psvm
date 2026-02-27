@@ -1,6 +1,49 @@
 use crate::vm::Instruction;
 use std::collections::HashMap;
 
+/// キーワード定義
+#[derive(Debug, PartialEq, Eq)]
+pub enum Keyword {
+    Let,
+    LogShow,
+}
+
+/// 演算子定義
+#[derive(Debug, PartialEq, Eq)]
+pub enum Operator {
+    Add,
+    Sub,
+    Mul,
+    Div,
+}
+
+/// オペランド（変数名や値）
+#[derive(Debug, PartialEq, Eq)]
+pub enum Operand {
+    Var(String),
+    Value(i32),
+}
+
+/// キーワード文字列→Keyword
+pub fn parse_keyword(s: &str) -> Option<Keyword> {
+    match s {
+        "let" => Some(Keyword::Let),
+        "logShow" => Some(Keyword::LogShow),
+        _ => None,
+    }
+}
+
+/// 演算子文字列→Operator
+pub fn parse_operator(s: &str) -> Option<Operator> {
+    match s {
+        "+" => Some(Operator::Add),
+        "-" => Some(Operator::Sub),
+        "*" => Some(Operator::Mul),
+        "/" => Some(Operator::Div),
+        _ => None,
+    }
+}
+
 pub enum ParseResult {
     Assignment(String, i32),
     Instructions(Vec<Instruction>),
