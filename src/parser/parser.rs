@@ -1,32 +1,6 @@
+use crate::ast::ast::{Expr, Stmt, BinOp, Program};
+use crate::codegen::codegen::program_to_instructions;
 use crate::vm::Instruction;
-
-
-// --- AST定義 ---
-#[derive(Debug, Clone, PartialEq)]
-pub enum Expr {
-    Int(i32),            // 整数リテラル
-    Var(String),         // 変数参照
-    BinOp(Box<Expr>, BinOp, Box<Expr>), // 2項演算
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum Stmt {
-    Let(String, Expr),   // let x = ...
-    Print(Expr),         // print/logShow ...
-    ExprStmt(Expr),      // 式のみの文
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct Program(pub Vec<Stmt>); // 複数文対応
-
-
-#[derive(Debug, Clone, PartialEq, Copy)]
-pub enum BinOp {
-    Add,
-    Sub,
-    Mul,
-    Div,
-}
 
 // --- ASTパーサ ---
 pub fn parse_expr(s: &str) -> Option<Expr> {
@@ -60,7 +34,7 @@ pub fn parse_stmt(s: &str) -> Option<Stmt> {
     let logshow_prefix = s.strip_prefix("logShow ");
     match (let_prefix, print_prefix, logshow_prefix) {
         (Some(rest), _, _) => {
-            let parts: Vec<_> = rest.split('=').map(|x| x.trim()).collect();
+            let parts: Vec<_> = rest.split('=') .map(|x| x.trim()).collect();
             if parts.len() == 2 {
                 Some(Stmt::Let(parts[0].to_string(), parse_expr(parts[1])?))
             } else {
@@ -89,44 +63,6 @@ pub fn parse_program(source: &str) -> Option<Program> {
         }
     }
     Some(Program(stmts))
-}
-
-fn expr_to_instructions(expr: &Expr) -> Vec<Instruction> {
-    match expr {
-        Expr::Int(n) => vec![Instruction::Push(*n)],
-        Expr::Var(_) => {
-            // 変数参照は未実装（今後拡張: 環境から値を取得してPushするなど）
-            // 今は0をPushしておく（ダミー）
-            vec![Instruction::Push(0)]
-        }
-        Expr::BinOp(lhs, BinOp::Add, rhs) => {
-            let mut code = expr_to_instructions(lhs);
-            code.extend(expr_to_instructions(rhs));
-            code.push(Instruction::Add);
-            code
-        }
-        // 他の演算子は未実装
-        _ => vec![],
-    }
-}
-
-fn stmt_to_instructions(stmt: &Stmt) -> Vec<Instruction> {
-    match stmt {
-        Stmt::Let(_name, expr) => {
-            // let文: 値を計算するが変数束縛は未実装
-            expr_to_instructions(expr)
-        }
-        Stmt::Print(expr) => {
-            let mut code = expr_to_instructions(expr);
-            code.push(Instruction::Print);
-            code
-        }
-        Stmt::ExprStmt(expr) => expr_to_instructions(expr),
-    }
-}
-
-fn program_to_instructions(prog: &Program) -> Vec<Instruction> {
-    prog.0.iter().flat_map(stmt_to_instructions).collect()
 }
 
 pub fn parse_simple_purs(source: &str) -> Vec<Instruction> {

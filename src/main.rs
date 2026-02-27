@@ -1,5 +1,5 @@
-
-
+mod ast;
+mod codegen;
 mod vm;
 mod parser;
 use vm::VM;
