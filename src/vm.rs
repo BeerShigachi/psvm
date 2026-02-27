@@ -1,4 +1,3 @@
-
 pub struct VM {
     pub stack: Vec<i32>,
 }
@@ -28,8 +27,12 @@ impl VM {
         }
     }
 
-    pub fn print(&self) {
-        println!("{:?}", self.stack);
+    pub fn print(&mut self) {
+        if let Some(val) = self.pop() {
+            println!("{}", val);
+        } else {
+            println!("<empty stack>");
+        }
     }
 
     pub fn run(&mut self, instructions: &[Instruction]) {

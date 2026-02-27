@@ -11,23 +11,23 @@ fn test_instruction_add() {
         Instruction::Print,
     ];
     vm.run(&instructions);
-    assert_eq!(vm.stack, vec![5]);
+    assert_eq!(vm.stack, vec![]); // printでpopされるので空
 }
 
 #[test]
 fn test_simple_purs_parser_and_vm() {
-    let purs_code = r#"
+        let purs_code = r#"
 module Test.Simple where
 
 main :: Effect Unit
 main = do
-  let x = 2
-  let y = 3
-  let z = x + y
-  logShow z
+    let x = 2
+    let y = 3
+    let z = x + y
+    logShow z
 "#;
-    let instructions = parse_simple_purs(purs_code);
-    let mut vm = psvm::vm::VM::new();
-    vm.run(&instructions);
-    assert_eq!(vm.stack, vec![5]);
+        let instructions = parse_simple_purs(purs_code);
+        let mut vm = psvm::vm::VM::new();
+        vm.run(&instructions);
+        assert_eq!(vm.stack, vec![]); // printでpopされるので空
 }
