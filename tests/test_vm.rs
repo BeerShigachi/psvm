@@ -1,5 +1,5 @@
-use psvm::vm::{VM, Instruction};
 use psvm::parser::parse_simple_purs;
+use psvm::vm::{Instruction, VM};
 
 #[test]
 fn test_instruction_add() {
@@ -16,7 +16,7 @@ fn test_instruction_add() {
 
 #[test]
 fn test_simple_purs_parser_and_vm() {
-        let purs_code = r#"
+    let purs_code = r#"
 module Test.Simple where
 
 main :: Effect Unit
@@ -26,8 +26,8 @@ main = do
     let z = x + y
     logShow z
 "#;
-        let instructions = parse_simple_purs(purs_code);
-        let mut vm = psvm::vm::VM::new();
-        vm.run(&instructions);
-        assert_eq!(vm.stack, vec![]); // printでpopされるので空
+    let instructions = parse_simple_purs(purs_code);
+    let mut vm = psvm::vm::VM::new();
+    vm.run(&instructions);
+    assert_eq!(vm.stack, vec![]); // printでpopされるので空
 }

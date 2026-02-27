@@ -1,9 +1,9 @@
 mod ast;
 mod codegen;
-mod vm;
 mod parser;
-use vm::VM;
+mod vm;
 use parser::parse_simple_purs;
+use vm::VM;
 
 fn main() {
     let mut vm = VM::new();

@@ -22,9 +22,7 @@ pub fn expr_to_instructions(expr: &Expr) -> Vec<Instruction> {
 
 pub fn stmt_to_instructions(stmt: &Stmt) -> Vec<Instruction> {
     match stmt {
-        Stmt::Let(_name, expr) => {
-            expr_to_instructions(expr)
-        }
+        Stmt::Let(_name, expr) => expr_to_instructions(expr),
         Stmt::Print(expr) => {
             let mut code = expr_to_instructions(expr);
             code.push(Instruction::Print);

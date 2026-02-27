@@ -1,4 +1,4 @@
-use crate::ast::ast::{Expr, Stmt, BinOp, Program};
+use crate::ast::ast::{BinOp, Expr, Program, Stmt};
 use crate::codegen::codegen::program_to_instructions;
 use crate::vm::Instruction;
 
@@ -33,7 +33,7 @@ pub fn parse_stmt(s: &str) -> Option<Stmt> {
     let logshow_prefix = s.strip_prefix("logShow ");
     match (let_prefix, print_prefix, logshow_prefix) {
         (Some(rest), _, _) => {
-            let parts: Vec<_> = rest.split('=') .map(|x| x.trim()).collect();
+            let parts: Vec<_> = rest.split('=').map(|x| x.trim()).collect();
             if parts.len() == 2 {
                 Some(Stmt::Let(parts[0].to_string(), parse_expr(parts[1])?))
             } else {
