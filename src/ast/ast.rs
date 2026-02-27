@@ -1,4 +1,3 @@
-// --- AST型定義 ---
 #[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
     Int(i32),

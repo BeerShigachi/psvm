@@ -2,7 +2,6 @@ use crate::ast::ast::{Expr, Stmt, BinOp, Program};
 use crate::codegen::codegen::program_to_instructions;
 use crate::vm::Instruction;
 
-// --- ASTパーサ ---
 pub fn parse_expr(s: &str) -> Option<Expr> {
     let s = s.trim();
     // 2項演算（加算のみ対応、左結合）
